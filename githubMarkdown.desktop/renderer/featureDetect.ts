@@ -3,6 +3,7 @@ const PATTERNS: RegExp[] = [
   /^- \[[ xX]\] /m,                                     // task list
   /^> \[!(NOTE|TIP|WARNING|CAUTION|IMPORTANT)\]/mi,     // alert
   /^\$\$/m,                                             // block math
+  /(?<![\\a-zA-Z0-9$])\$[^\s$][^$\n]*[^\s$\\]\$(?![a-zA-Z0-9])/, // inline math
   /^```mermaid/m,                                       // mermaid
   /\[\^[\w-]+\]/,                                       // footnote ref
 ];

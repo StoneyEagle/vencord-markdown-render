@@ -30,9 +30,4 @@ export const settings = definePluginSettings({
     description: "Render mermaid code fences as diagrams.",
     default: true,
   },
-  followDiscordTheme: {
-    type: OptionType.BOOLEAN,
-    description: "Automatically match Discord's light/dark theme.",
-    default: true,
-  },
 });

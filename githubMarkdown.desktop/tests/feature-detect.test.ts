@@ -32,6 +32,16 @@ describe("hasGfmFeature", () => {
     expect(hasGfmFeature("$$\nx=1\n$$")).toBe(true);
   });
 
+  it("detects inline math", () => {
+    expect(hasGfmFeature("inline $x^2$ math")).toBe(true);
+    expect(hasGfmFeature("formula $E = mc^2$")).toBe(true);
+  });
+
+  it("does not confuse currency for math", () => {
+    expect(hasGfmFeature("costs $5 to make")).toBe(false);
+    expect(hasGfmFeature("only $100")).toBe(false);
+  });
+
   it("detects mermaid fence", () => {
     expect(hasGfmFeature("```mermaid\ngraph TD\nA-->B\n```")).toBe(true);
   });
