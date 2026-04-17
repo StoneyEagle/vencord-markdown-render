@@ -40,9 +40,9 @@ export async function renderMarkdown(
   processor = processor
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
-    .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings, { behavior: "append" })
     .use(rehypeSanitize, githubSanitizeSchema)
+    .use(rehypeSlug, { prefix: "user-content-" })
+    .use(rehypeAutolinkHeadings, { behavior: "append" })
     .use(rehypeHighlight, { detect: true, ignoreMissing: true });
 
   if (opts.enableMath) processor = processor.use(rehypeKatex);

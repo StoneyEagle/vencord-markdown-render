@@ -48,8 +48,8 @@ describe("githubSanitizeSchema", () => {
     expect(out).toContain("<th>");
   });
 
-  it("keeps heading id attributes (for anchors)", async () => {
+  it("strips raw-HTML heading ids (slug plugin adds trusted ids downstream)", async () => {
     const out = await run('<h2 id="foo">Foo</h2>');
-    expect(out).toContain('id="user-content-foo"');
+    expect(out).not.toContain('id="foo"');
   });
 });
