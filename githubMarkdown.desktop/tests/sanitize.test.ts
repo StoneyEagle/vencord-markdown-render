@@ -50,6 +50,6 @@ describe("githubSanitizeSchema", () => {
 
   it("keeps heading id attributes (for anchors)", async () => {
     const out = await run('<h2 id="foo">Foo</h2>');
-    expect(out).toContain('id="foo"');
+    expect(out).toContain('id="user-content-foo"');
   });
 });

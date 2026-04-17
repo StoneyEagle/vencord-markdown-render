@@ -4,7 +4,6 @@ import type { Schema } from "hast-util-sanitize";
 // Extends rehype-sanitize default (GitHub-aligned) with GFM + heading-id support.
 export const githubSanitizeSchema: Schema = {
   ...defaultSchema,
-  clobberPrefix: "",
   attributes: {
     ...defaultSchema.attributes,
     // Allow id on headings for autolinked anchors

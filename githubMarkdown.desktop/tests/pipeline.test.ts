@@ -38,7 +38,7 @@ describe("renderMarkdown", () => {
 
   it("renders heading with autolink anchor", async () => {
     const html = await render("## Hello World");
-    expect(html).toMatch(/<h2[^>]+id="hello-world"/);
+    expect(html).toMatch(/<h2[^>]+id="user-content-hello-world"/);
     expect(html).toContain('href="#hello-world"');
   });
 
