@@ -24,28 +24,25 @@ export async function renderMarkdown(
   source: string,
   opts: RenderOptions,
 ): Promise<ReactNode> {
-  let processor = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkGithubAlerts);
-
-  if (opts.enableMath) processor = processor.use(remarkMath);
-
+  let mermaidPlugin: any = null;
   if (opts.enableMermaid) {
-    // Mermaid plugin must run on mdast before remark-rehype.
-    const { default: remarkMermaidjs } = await import("remark-mermaidjs");
-    processor = processor.use(remarkMermaidjs);
+    const mod = await import("remark-mermaidjs");
+    mermaidPlugin = mod.default;
   }
 
-  processor = processor
+  const processor = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkGithubAlerts)
+    .use(opts.enableMath ? [remarkMath] : [])
+    .use(opts.enableMermaid && mermaidPlugin ? [mermaidPlugin] : [])
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, githubSanitizeSchema)
     .use(rehypeSlug, { prefix: "user-content-" })
     .use(rehypeAutolinkHeadings, { behavior: "append" })
-    .use(rehypeHighlight, { detect: true, ignoreMissing: true });
-
-  if (opts.enableMath) processor = processor.use(rehypeKatex);
+    .use(rehypeHighlight, { detect: true, ignoreMissing: true })
+    .use(opts.enableMath ? [rehypeKatex] : []);
 
   const tree = processor.parse(source);
   const hast = await processor.run(tree);

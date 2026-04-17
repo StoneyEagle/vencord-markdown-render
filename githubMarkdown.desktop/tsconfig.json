@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node"],
     "paths": {
       "@webpack/*": ["../node_modules/vencord/dist/webpack/*"],
       "@utils/*": ["../node_modules/vencord/dist/utils/*"],
