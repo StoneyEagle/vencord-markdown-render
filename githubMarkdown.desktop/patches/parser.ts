@@ -23,7 +23,7 @@ export function installParserPatch(target: PatchTarget, opts: ParserPatchOptions
     } catch (e) {
       console.error("[GithubMarkdown] render failed, falling back:", e);
     }
-    return original(content, inline, state);
+    return original.call(target, content, inline, state);
   };
 }
 
