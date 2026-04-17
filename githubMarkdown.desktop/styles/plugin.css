@@ -1,0 +1,69 @@
+.vc-ghmd-attachment {
+  margin: 8px 0;
+  border: 1px solid var(--background-modifier-accent);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background-secondary);
+}
+
+.vc-ghmd-attachment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--background-tertiary);
+  border-bottom: 1px solid var(--background-modifier-accent);
+}
+
+.vc-ghmd-filename {
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+
+.vc-ghmd-toggle {
+  display: inline-flex;
+  border: 1px solid var(--background-modifier-accent);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.vc-ghmd-toggle-btn {
+  background: transparent;
+  border: 0;
+  color: var(--text-normal);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.vc-ghmd-toggle-btn.vc-ghmd-toggle-active {
+  background: var(--brand-500);
+  color: white;
+}
+
+.vc-ghmd-attachment > .vc-ghmd-root,
+.vc-ghmd-attachment > .vc-ghmd-raw {
+  padding: 16px;
+}
+
+.vc-ghmd-raw {
+  background: var(--background-tertiary);
+  margin: 0;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 0.85em;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.vc-ghmd-loading,
+.vc-ghmd-error {
+  padding: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.vc-ghmd-error {
+  color: var(--status-danger);
+  font-style: normal;
+}

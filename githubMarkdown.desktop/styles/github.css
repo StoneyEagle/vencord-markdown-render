@@ -1,0 +1,84 @@
+.vc-ghmd-root {
+  --color-fg-default: var(--text-normal);
+  --color-fg-muted: var(--text-muted);
+  --color-canvas-default: transparent;
+  --color-canvas-subtle: var(--background-secondary);
+  --color-border-default: var(--background-modifier-accent);
+  --color-border-muted: var(--background-modifier-hover);
+  --color-accent-fg: var(--brand-500);
+  --color-danger-fg: var(--status-danger);
+  --color-attention-fg: var(--status-warning);
+
+  color: var(--color-fg-default);
+  line-height: 1.5;
+  font-size: 1rem;
+  word-wrap: break-word;
+}
+
+.vc-ghmd-root h1, .vc-ghmd-root h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.vc-ghmd-root h1 { font-size: 2em; margin: 0.67em 0; }
+.vc-ghmd-root h2 { font-size: 1.5em; margin: 0.75em 0; }
+.vc-ghmd-root h3 { font-size: 1.25em; margin: 0.83em 0; }
+
+.vc-ghmd-root table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  display: block;
+  overflow-x: auto;
+}
+.vc-ghmd-root th, .vc-ghmd-root td {
+  border: 1px solid var(--color-border-default);
+  padding: 6px 13px;
+}
+.vc-ghmd-root tr:nth-child(even) {
+  background: var(--color-canvas-subtle);
+}
+
+.vc-ghmd-root blockquote {
+  color: var(--color-fg-muted);
+  border-left: 0.25em solid var(--color-border-default);
+  padding: 0 1em;
+  margin: 1em 0;
+}
+
+.vc-ghmd-root code {
+  background: var(--color-canvas-subtle);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 85%;
+}
+
+.vc-ghmd-root pre > code {
+  display: block;
+  padding: 16px;
+  overflow-x: auto;
+  background: var(--color-canvas-subtle);
+  border-radius: 6px;
+  font-size: 85%;
+}
+
+.vc-ghmd-root ul, .vc-ghmd-root ol { padding-left: 2em; margin: 1em 0; }
+.vc-ghmd-root li { margin: 0.25em 0; }
+.vc-ghmd-root li input[type="checkbox"] { margin-right: 0.5em; }
+
+.vc-ghmd-root a { color: var(--color-accent-fg); text-decoration: none; }
+.vc-ghmd-root a:hover { text-decoration: underline; }
+
+.vc-ghmd-root .markdown-alert {
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  border-left: 0.25em solid;
+  background: var(--color-canvas-subtle);
+}
+.vc-ghmd-root .markdown-alert-note { border-color: var(--color-accent-fg); }
+.vc-ghmd-root .markdown-alert-tip { border-color: #1a7f37; }
+.vc-ghmd-root .markdown-alert-warning { border-color: var(--color-attention-fg); }
+.vc-ghmd-root .markdown-alert-caution { border-color: var(--color-danger-fg); }
+.vc-ghmd-root .markdown-alert-important { border-color: #8250df; }
+
+.vc-ghmd-root img { max-width: 100%; }
