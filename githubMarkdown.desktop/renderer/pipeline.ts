@@ -11,7 +11,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { React } from "@webpack/common";
 import type { ReactNode } from "react";
 import { githubSanitizeSchema } from "./sanitize";
 
@@ -24,6 +24,11 @@ export async function renderMarkdown(
   source: string,
   opts: RenderOptions,
 ): Promise<ReactNode> {
+  const { Fragment, createElement } = React;
+  const jsx = (type: any, props: any, key?: any) =>
+    createElement(type, key !== undefined ? { ...props, key } : props);
+  const jsxs = jsx;
+
   let mermaidPlugin: any = null;
   if (opts.enableMermaid) {
     const mod = await import("remark-mermaidjs");

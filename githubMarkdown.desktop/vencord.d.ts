@@ -10,9 +10,11 @@ declare module "@utils/types" {
 declare module "@api/Settings" {
   export function definePluginSettings<T>(t: T): { store: Record<string, any> };
 }
-declare module "@api/MessageAccessories" {
-  export function addMessageAccessory(name: string, fn: (props: any) => any, priority?: number): void;
-  export function removeMessageAccessory(name: string): void;
+declare module "@components/ErrorBoundary" {
+  const ErrorBoundary: {
+    wrap<P>(comp: (props: P) => any, options?: any): (props: P) => any;
+  };
+  export default ErrorBoundary;
 }
 declare module "@webpack/common" {
   export const Parser: {

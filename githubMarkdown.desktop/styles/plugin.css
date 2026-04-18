@@ -1,61 +1,180 @@
-.vc-ghmd-attachment {
-  margin: 8px 0;
-  border: 1px solid var(--background-modifier-accent);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--background-secondary);
-}
+/* Plugin-level styles — wrappers for the FileViewer patches and states for
+ * MarkdownView. The GitHub-styled content itself lives in github.css. */
 
-.vc-ghmd-attachment-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  background: var(--background-tertiary);
-  border-bottom: 1px solid var(--background-modifier-accent);
-}
-
-.vc-ghmd-filename {
-  font-family: var(--font-code, ui-monospace, monospace);
-  font-size: 0.9em;
-  color: var(--text-muted);
-}
-
+/* ── Raw / Rendered toggle ─────────────────────────────────────────── */
 .vc-ghmd-toggle {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 10;
   display: inline-flex;
-  border: 1px solid var(--background-modifier-accent);
+  border: 1px solid var(--background-modifier-accent, #3b3f45);
   border-radius: 6px;
   overflow: hidden;
+  background: var(--background-tertiary, #1e2227);
+  font-size: 12px;
+  font-family: "gg sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 }
-
+.vc-ghmd-modal > .vc-ghmd-toggle {
+  top: 16px;
+  right: 24px;
+}
 .vc-ghmd-toggle-btn {
   background: transparent;
   border: 0;
-  color: var(--text-normal);
-  padding: 4px 10px;
+  color: var(--text-muted, #8b949e);
+  padding: 4px 12px;
   cursor: pointer;
-  font-size: 0.85em;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
 }
-
+.vc-ghmd-toggle-btn:hover {
+  color: var(--text-normal, #c9d1d9);
+  background: var(--background-modifier-hover, rgba(255, 255, 255, 0.06));
+}
 .vc-ghmd-toggle-btn.vc-ghmd-toggle-active {
-  background: var(--brand-500);
-  color: white;
+  background: var(--brand-500, #58a6ff);
+  color: #ffffff;
 }
 
-.vc-ghmd-attachment > .vc-ghmd-root,
-.vc-ghmd-attachment > .vc-ghmd-raw {
-  padding: 16px;
-}
-
+/* Raw pre/code block styling. */
 .vc-ghmd-raw {
-  background: var(--background-tertiary);
   margin: 0;
-  font-family: var(--font-code, ui-monospace, monospace);
-  font-size: 0.85em;
+  padding: 16px;
+  background: var(--background-tertiary, #161b22);
+  color: var(--text-normal, #c9d1d9);
+  font-family: var(--font-code, ui-monospace, SFMono-Regular, Consolas, monospace);
+  font-size: 13px;
+  line-height: 1.5;
   white-space: pre;
-  overflow-x: auto;
+  overflow: auto;
+  border-radius: 6px;
+}
+.vc-ghmd-raw code {
+  background: transparent !important;
+  padding: 0 !important;
+  font-family: inherit !important;
 }
 
+/* ── Inline cropped preview (inside a message bubble) ───────────────── */
+.vc-ghmd-inline-cropped {
+  position: relative;
+  max-height: 260px;
+  overflow: hidden;
+  padding: 12px 16px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vc-ghmd-inline-cropped > .vc-ghmd-root {
+  font-size: 14px;
+  line-height: 1.5;
+  display: block;
+  min-height: 1px;
+}
+
+/* Bottom fade-out hinting more content. */
+.vc-ghmd-inline-cropped::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--background-secondary) 85%,
+    var(--background-secondary)
+  );
+}
+
+/* ── Fullscreen modal preview ─────────────────────────────────────────
+ * Discord's .modalTextContainer is a flex scroller with content-sized
+ * height. We need to contribute to its layout (position: static/relative)
+ * and set an explicit viewport-based height so it actually has something
+ * to scroll. */
+.vc-ghmd-modal {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 140px);
+  min-height: 60vh;
+  overflow: auto;
+  background: var(--background-primary);
+  padding: 40px 56px;
+  box-sizing: border-box;
+}
+
+/* Dark-theme scrollbars on the modal + any inner scrollers
+ * (tables, pre blocks). Discord's default scrollbar for custom
+ * regions is the light Electron one, which reads as white on dark. */
+.vc-ghmd-modal,
+.vc-ghmd-modal *,
+.vc-ghmd-inline-cropped,
+.vc-ghmd-inline-cropped * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--background-modifier-accent, #3b3f45) transparent;
+}
+.vc-ghmd-modal::-webkit-scrollbar,
+.vc-ghmd-modal *::-webkit-scrollbar,
+.vc-ghmd-inline-cropped::-webkit-scrollbar,
+.vc-ghmd-inline-cropped *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.vc-ghmd-modal::-webkit-scrollbar-track,
+.vc-ghmd-modal *::-webkit-scrollbar-track,
+.vc-ghmd-inline-cropped::-webkit-scrollbar-track,
+.vc-ghmd-inline-cropped *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.vc-ghmd-modal::-webkit-scrollbar-thumb,
+.vc-ghmd-modal *::-webkit-scrollbar-thumb,
+.vc-ghmd-inline-cropped::-webkit-scrollbar-thumb,
+.vc-ghmd-inline-cropped *::-webkit-scrollbar-thumb {
+  background: var(--background-modifier-accent, #3b3f45);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.vc-ghmd-modal::-webkit-scrollbar-thumb:hover,
+.vc-ghmd-modal *::-webkit-scrollbar-thumb:hover,
+.vc-ghmd-inline-cropped::-webkit-scrollbar-thumb:hover,
+.vc-ghmd-inline-cropped *::-webkit-scrollbar-thumb:hover {
+  background: var(--background-modifier-hover, #4f535a);
+  background-clip: padding-box;
+}
+.vc-ghmd-modal::-webkit-scrollbar-corner,
+.vc-ghmd-modal *::-webkit-scrollbar-corner,
+.vc-ghmd-inline-cropped::-webkit-scrollbar-corner,
+.vc-ghmd-inline-cropped *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.vc-ghmd-modal > .vc-ghmd-root {
+  max-width: 980px;
+  margin: 0 auto;
+  min-width: 0;
+}
+
+/* Let the pre / tables inside horizontally scroll inside their own box
+ * instead of forcing the whole modal horizontal. */
+.vc-ghmd-modal .vc-ghmd-root pre,
+.vc-ghmd-modal .vc-ghmd-root table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .vc-ghmd-modal { padding: 24px 16px; }
+}
+
+/* ── State banners used by MarkdownView ──────────────────────────── */
 .vc-ghmd-loading,
 .vc-ghmd-error {
   padding: 12px;
@@ -66,4 +185,10 @@
 .vc-ghmd-error {
   color: var(--status-danger);
   font-style: normal;
+}
+
+/* When MarkdownView renders inside a message bubble (inline GFM parser
+ * patch), it should blend with the message, not look like a card. */
+.vc-ghmd-root.vc-ghmd-inline {
+  font-size: inherit;
 }

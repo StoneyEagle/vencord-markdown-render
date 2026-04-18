@@ -1,4 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "@webpack/common";
+import type { ReactNode } from "react";
 import { renderMarkdown } from "../renderer/pipeline";
 
 export interface MarkdownViewProps {

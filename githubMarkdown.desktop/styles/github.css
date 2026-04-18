@@ -1,84 +1,489 @@
+/* GitHub-flavored markdown stylesheet, scoped to .vc-ghmd-root.
+ * Inspired by sindresorhus/github-markdown-css, with Primer design tokens
+ * mapped onto Discord CSS vars so the rendered markdown adapts to the user's
+ * Discord theme (light / dark / amoled / custom). */
+
 .vc-ghmd-root {
-  --color-fg-default: var(--text-normal);
-  --color-fg-muted: var(--text-muted);
+  /* ── Primer tokens mapped to Discord vars with hardcoded dark-theme
+   * fallbacks. Discord's 2025 oklch-based theme doesn't always populate
+   * the legacy --text-normal vars inside file-preview contexts, so we
+   * chain through several names and end at GitHub dark colors. */
+  --color-fg-default: var(--text-normal, var(--text-default, var(--color-text-default, #c9d1d9)));
+  --color-fg-muted: var(--text-muted, var(--color-text-muted, #8b949e));
+  --color-fg-subtle: var(--text-faint, var(--color-text-muted, #6e7681));
   --color-canvas-default: transparent;
-  --color-canvas-subtle: var(--background-secondary);
-  --color-border-default: var(--background-modifier-accent);
-  --color-border-muted: var(--background-modifier-hover);
-  --color-accent-fg: var(--brand-500);
-  --color-danger-fg: var(--status-danger);
-  --color-attention-fg: var(--status-warning);
+  --color-canvas-subtle: var(--background-secondary, var(--bg-overlay-2, #161b22));
+  --color-border-default: var(--background-modifier-accent, var(--border-subtle, #30363d));
+  --color-border-muted: var(--background-modifier-hover, #21262d);
+  --color-neutral-muted: var(--background-modifier-hover, #21262d);
+  --color-accent-fg: var(--brand-500, #58a6ff);
+  --color-accent-emphasis: var(--brand-500, #58a6ff);
+  --color-danger-fg: var(--status-danger, #f85149);
+  --color-attention-fg: var(--status-warning, #d29922);
+  --color-success-fg: #3fb950;
+  --color-done-fg: #a371f7;
+  --color-severe-fg: #bc4c00;
 
-  color: var(--color-fg-default);
+  color: var(--color-fg-default) !important;
+  background: var(--color-canvas-default);
+  /* Discord file preview parents set mono fonts via pre/code context — force
+   * proportional for body content. Code blocks still opt in via their own rule. */
+  font-family: "gg sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+  font-size: 16px;
   line-height: 1.5;
-  font-size: 1rem;
   word-wrap: break-word;
-}
-
-.vc-ghmd-root h1, .vc-ghmd-root h2 {
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--color-border-muted);
-}
-
-.vc-ghmd-root h1 { font-size: 2em; margin: 0.67em 0; }
-.vc-ghmd-root h2 { font-size: 1.5em; margin: 0.75em 0; }
-.vc-ghmd-root h3 { font-size: 1.25em; margin: 0.83em 0; }
-
-.vc-ghmd-root table {
-  border-collapse: collapse;
-  margin: 1em 0;
   display: block;
-  overflow-x: auto;
-}
-.vc-ghmd-root th, .vc-ghmd-root td {
-  border: 1px solid var(--color-border-default);
-  padding: 6px 13px;
-}
-.vc-ghmd-root tr:nth-child(even) {
-  background: var(--color-canvas-subtle);
 }
 
+/* Force descendants to inherit our color rather than pick up the dark
+ * oklch() from Discord's pre/hljs parent. */
+.vc-ghmd-root *:not(pre):not(code):not(kbd):not(.hljs) {
+  color: inherit;
+}
+
+/* Light-theme override — when the OS is in light mode, invert text color. */
+@media (prefers-color-scheme: light) {
+  .vc-ghmd-root {
+    --color-fg-default: #1f2328;
+    --color-fg-muted: #57606a;
+    --color-canvas-subtle: #f6f8fa;
+    --color-border-default: #d0d7de;
+    --color-border-muted: #d8dee4;
+    --color-accent-fg: #0969da;
+    --color-success-fg: #1a7f37;
+    --color-done-fg: #8250df;
+  }
+}
+
+/* Inline code, code blocks, and kbd keep mono */
+.vc-ghmd-root code,
+.vc-ghmd-root tt,
+.vc-ghmd-root pre,
+.vc-ghmd-root pre code,
+.vc-ghmd-root kbd {
+  font-family: var(--font-code, ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace) !important;
+}
+
+.vc-ghmd-root * { box-sizing: border-box; }
+
+/* ── Block spacing ─────────────────────────────────────────────────── */
+.vc-ghmd-root > *:first-child { margin-top: 0 !important; }
+.vc-ghmd-root > *:last-child { margin-bottom: 0 !important; }
+
+.vc-ghmd-root p,
+.vc-ghmd-root blockquote,
+.vc-ghmd-root ul,
+.vc-ghmd-root ol,
+.vc-ghmd-root dl,
+.vc-ghmd-root table,
+.vc-ghmd-root pre,
+.vc-ghmd-root details {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+/* ── Headings ──────────────────────────────────────────────────────── */
+.vc-ghmd-root h1,
+.vc-ghmd-root h2,
+.vc-ghmd-root h3,
+.vc-ghmd-root h4,
+.vc-ghmd-root h5,
+.vc-ghmd-root h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-fg-default);
+  position: relative;
+}
+
+.vc-ghmd-root h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--background-modifier-accent);
+}
+.vc-ghmd-root h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--background-modifier-accent);
+}
+.vc-ghmd-root h3 { font-size: 1.25em; }
+.vc-ghmd-root h4 { font-size: 1em; }
+.vc-ghmd-root h5 { font-size: 0.875em; }
+.vc-ghmd-root h6 { font-size: 0.85em; color: var(--color-fg-muted); }
+
+/* Autolink header anchors from rehype-autolink-headings */
+.vc-ghmd-root .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 80ms ease-in-out;
+}
+.vc-ghmd-root .anchor::before {
+  content: "#";
+  color: var(--color-fg-muted);
+  font-weight: normal;
+}
+.vc-ghmd-root h1:hover .anchor,
+.vc-ghmd-root h2:hover .anchor,
+.vc-ghmd-root h3:hover .anchor,
+.vc-ghmd-root h4:hover .anchor,
+.vc-ghmd-root h5:hover .anchor,
+.vc-ghmd-root h6:hover .anchor {
+  opacity: 1;
+}
+.vc-ghmd-root .anchor:focus { opacity: 1; outline: none; }
+
+/* ── Paragraphs & text ────────────────────────────────────────────── */
+.vc-ghmd-root p { margin-top: 0; margin-bottom: 16px; }
+.vc-ghmd-root strong { font-weight: 600; }
+.vc-ghmd-root small { font-size: 90%; }
+.vc-ghmd-root sub, .vc-ghmd-root sup { font-size: 75%; line-height: 0; }
+.vc-ghmd-root mark {
+  background-color: #fff8c5;
+  color: #1f2328;
+  padding: 0.2em;
+  border-radius: 3px;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────── */
+.vc-ghmd-root a {
+  color: var(--color-accent-fg);
+  text-decoration: none;
+  background-color: transparent;
+}
+.vc-ghmd-root a:hover { text-decoration: underline; }
+.vc-ghmd-root a:not([href]) { color: inherit; text-decoration: none; }
+
+/* ── Lists ─────────────────────────────────────────────────────────── */
+.vc-ghmd-root ul,
+.vc-ghmd-root ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.vc-ghmd-root ul ul,
+.vc-ghmd-root ul ol,
+.vc-ghmd-root ol ol,
+.vc-ghmd-root ol ul { margin-top: 0; margin-bottom: 0; }
+.vc-ghmd-root li { margin-top: 0.25em; }
+.vc-ghmd-root li > p { margin-top: 16px; }
+.vc-ghmd-root li + li { margin-top: 0.25em; }
+.vc-ghmd-root ul { list-style: disc; }
+.vc-ghmd-root ul ul { list-style: circle; }
+.vc-ghmd-root ul ul ul { list-style: square; }
+.vc-ghmd-root ol { list-style: decimal; }
+
+/* Task lists */
+.vc-ghmd-root .task-list-item {
+  list-style-type: none;
+}
+.vc-ghmd-root .task-list-item label { font-weight: 400; }
+.vc-ghmd-root .task-list-item.enabled label { cursor: pointer; }
+.vc-ghmd-root .task-list-item + .task-list-item { margin-top: 4px; }
+.vc-ghmd-root .task-list-item .handle { display: none; }
+.vc-ghmd-root .task-list-item-checkbox,
+.vc-ghmd-root li input[type="checkbox"] {
+  margin: 0 0.2em 0.25em -1.4em;
+  vertical-align: middle;
+}
+.vc-ghmd-root ul.contains-task-list { padding-left: 2em; }
+
+/* Definition lists */
+.vc-ghmd-root dl { padding: 0; }
+.vc-ghmd-root dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+.vc-ghmd-root dl dd { padding: 0 16px; margin-bottom: 16px; }
+
+/* ── Blockquote ────────────────────────────────────────────────────── */
 .vc-ghmd-root blockquote {
+  padding: 0 1em;
+  margin: 0 0 16px 0;
   color: var(--color-fg-muted);
   border-left: 0.25em solid var(--color-border-default);
-  padding: 0 1em;
-  margin: 1em 0;
+}
+.vc-ghmd-root blockquote > :first-child { margin-top: 0; }
+.vc-ghmd-root blockquote > :last-child { margin-bottom: 0; }
+
+/* ── Horizontal rule ──────────────────────────────────────────────── */
+.vc-ghmd-root hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--color-border-muted);
+  border: 0;
 }
 
-.vc-ghmd-root code {
-  background: var(--color-canvas-subtle);
-  padding: 0.2em 0.4em;
-  border-radius: 6px;
-  font-family: var(--font-code, ui-monospace, monospace);
-  font-size: 85%;
-}
-
-.vc-ghmd-root pre > code {
+/* ── Tables ────────────────────────────────────────────────────────── */
+.vc-ghmd-root table {
   display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 0 0 16px 0;
+}
+.vc-ghmd-root table th,
+.vc-ghmd-root table td {
+  padding: 6px 13px;
+  border: 1px solid var(--color-border-default);
+}
+.vc-ghmd-root table th { font-weight: 600; }
+.vc-ghmd-root table thead tr,
+.vc-ghmd-root table thead th {
+  background-color: var(--color-canvas-subtle);
+}
+.vc-ghmd-root table tr {
+  background-color: var(--color-canvas-default);
+  border-top: 1px solid var(--color-border-muted);
+}
+.vc-ghmd-root table tr:nth-child(2n) {
+  background-color: var(--color-canvas-subtle);
+}
+.vc-ghmd-root table img { background-color: transparent; }
+
+/* ── Images ────────────────────────────────────────────────────────── */
+.vc-ghmd-root img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: var(--color-canvas-default);
+}
+.vc-ghmd-root img[align="right"] { padding-left: 20px; }
+.vc-ghmd-root img[align="left"] { padding-right: 20px; }
+
+/* ── Inline code ──────────────────────────────────────────────────── */
+.vc-ghmd-root code,
+.vc-ghmd-root tt {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  white-space: break-spaces;
+  background-color: var(--color-neutral-muted);
+  border-radius: 6px;
+  font-family: var(--font-code, ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace);
+}
+
+.vc-ghmd-root code br,
+.vc-ghmd-root tt br { display: none; }
+
+.vc-ghmd-root del code { text-decoration: inherit; }
+
+/* ── Code blocks ───────────────────────────────────────────────────── */
+.vc-ghmd-root pre {
   padding: 16px;
-  overflow-x: auto;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  color: var(--color-fg-default);
+  background-color: var(--color-canvas-subtle);
+  border-radius: 6px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  word-wrap: normal;
+  font-family: var(--font-code, ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace);
+}
+.vc-ghmd-root pre code,
+.vc-ghmd-root pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+  font-size: 100%;
+  white-space: pre;
+}
+.vc-ghmd-root pre code.hljs,
+.vc-ghmd-root .hljs { background: transparent; padding: 0; }
+
+/* highlight.js palette — GitHub-ish light/dark neutral.
+   Tokens map roughly to Discord text brightness so it reads OK on both themes. */
+.vc-ghmd-root .hljs-comment,
+.vc-ghmd-root .hljs-quote { color: var(--color-fg-muted); font-style: italic; }
+.vc-ghmd-root .hljs-keyword,
+.vc-ghmd-root .hljs-selector-tag,
+.vc-ghmd-root .hljs-literal,
+.vc-ghmd-root .hljs-section,
+.vc-ghmd-root .hljs-link { color: #cf222e; }
+.vc-ghmd-root .hljs-function .hljs-keyword { color: #cf222e; }
+.vc-ghmd-root .hljs-subst { color: var(--color-fg-default); }
+.vc-ghmd-root .hljs-string,
+.vc-ghmd-root .hljs-regexp,
+.vc-ghmd-root .hljs-addition,
+.vc-ghmd-root .hljs-attribute,
+.vc-ghmd-root .hljs-meta-string { color: #0a3069; }
+.vc-ghmd-root .hljs-built_in,
+.vc-ghmd-root .hljs-class .hljs-title { color: #953800; }
+.vc-ghmd-root .hljs-variable,
+.vc-ghmd-root .hljs-template-variable,
+.vc-ghmd-root .hljs-type,
+.vc-ghmd-root .hljs-selector-class,
+.vc-ghmd-root .hljs-selector-attr,
+.vc-ghmd-root .hljs-selector-pseudo,
+.vc-ghmd-root .hljs-number { color: #0550ae; }
+.vc-ghmd-root .hljs-symbol,
+.vc-ghmd-root .hljs-bullet,
+.vc-ghmd-root .hljs-meta,
+.vc-ghmd-root .hljs-selector-id,
+.vc-ghmd-root .hljs-title { color: #8250df; }
+.vc-ghmd-root .hljs-name,
+.vc-ghmd-root .hljs-tag,
+.vc-ghmd-root .hljs-attr { color: #116329; }
+.vc-ghmd-root .hljs-emphasis { font-style: italic; }
+.vc-ghmd-root .hljs-strong { font-weight: 600; }
+.vc-ghmd-root .hljs-deletion { color: #82071e; background-color: #ffebe9; }
+.vc-ghmd-root .hljs-addition { color: #116329; background-color: #dafbe1; }
+
+/* Dark-theme overrides. Discord exposes --theme-mode on html or body via
+   Electron; we also sniff canvas-default brightness for safety. */
+@media (prefers-color-scheme: dark) {
+  .vc-ghmd-root .hljs-keyword,
+  .vc-ghmd-root .hljs-selector-tag,
+  .vc-ghmd-root .hljs-literal,
+  .vc-ghmd-root .hljs-section,
+  .vc-ghmd-root .hljs-link,
+  .vc-ghmd-root .hljs-function .hljs-keyword { color: #ff7b72; }
+  .vc-ghmd-root .hljs-string,
+  .vc-ghmd-root .hljs-regexp,
+  .vc-ghmd-root .hljs-attribute,
+  .vc-ghmd-root .hljs-meta-string { color: #a5d6ff; }
+  .vc-ghmd-root .hljs-built_in,
+  .vc-ghmd-root .hljs-class .hljs-title { color: #ffa657; }
+  .vc-ghmd-root .hljs-variable,
+  .vc-ghmd-root .hljs-template-variable,
+  .vc-ghmd-root .hljs-type,
+  .vc-ghmd-root .hljs-selector-class,
+  .vc-ghmd-root .hljs-selector-attr,
+  .vc-ghmd-root .hljs-selector-pseudo,
+  .vc-ghmd-root .hljs-number { color: #79c0ff; }
+  .vc-ghmd-root .hljs-symbol,
+  .vc-ghmd-root .hljs-bullet,
+  .vc-ghmd-root .hljs-meta,
+  .vc-ghmd-root .hljs-selector-id,
+  .vc-ghmd-root .hljs-title { color: #d2a8ff; }
+  .vc-ghmd-root .hljs-name,
+  .vc-ghmd-root .hljs-tag,
+  .vc-ghmd-root .hljs-attr { color: #7ee787; }
+  .vc-ghmd-root .hljs-deletion { color: #ffa198; background-color: rgba(248, 81, 73, 0.15); }
+  .vc-ghmd-root .hljs-addition { color: #aff5b4; background-color: rgba(46, 160, 67, 0.15); }
+}
+
+/* ── GitHub alerts (remark-github-alerts) ─────────────────────────── */
+.vc-ghmd-root .markdown-alert {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid;
+  color: inherit;
   background: var(--color-canvas-subtle);
   border-radius: 6px;
-  font-size: 85%;
+}
+.vc-ghmd-root .markdown-alert > :first-child { margin-top: 0; }
+.vc-ghmd-root .markdown-alert > :last-child { margin-bottom: 0; }
+.vc-ghmd-root .markdown-alert .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.vc-ghmd-root .markdown-alert .markdown-alert-title svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+.vc-ghmd-root .markdown-alert-note {
+  border-left-color: var(--color-accent-fg);
+}
+.vc-ghmd-root .markdown-alert-note .markdown-alert-title { color: var(--color-accent-fg); }
+.vc-ghmd-root .markdown-alert-tip {
+  border-left-color: var(--color-success-fg);
+}
+.vc-ghmd-root .markdown-alert-tip .markdown-alert-title { color: var(--color-success-fg); }
+.vc-ghmd-root .markdown-alert-warning {
+  border-left-color: var(--color-attention-fg);
+}
+.vc-ghmd-root .markdown-alert-warning .markdown-alert-title { color: var(--color-attention-fg); }
+.vc-ghmd-root .markdown-alert-caution {
+  border-left-color: var(--color-danger-fg);
+}
+.vc-ghmd-root .markdown-alert-caution .markdown-alert-title { color: var(--color-danger-fg); }
+.vc-ghmd-root .markdown-alert-important {
+  border-left-color: var(--color-done-fg);
+}
+.vc-ghmd-root .markdown-alert-important .markdown-alert-title { color: var(--color-done-fg); }
+
+/* ── KaTeX math ─────────────────────────────────────────────────── */
+.vc-ghmd-root .math-display {
+  overflow-x: auto;
+  padding: 8px 0;
+}
+.vc-ghmd-root .katex { font-size: 1.1em; }
+
+/* ── Mermaid diagrams ─────────────────────────────────────────── */
+.vc-ghmd-root .mermaid,
+.vc-ghmd-root svg[aria-roledescription] {
+  display: block;
+  margin: 16px auto;
+  max-width: 100%;
 }
 
-.vc-ghmd-root ul, .vc-ghmd-root ol { padding-left: 2em; margin: 1em 0; }
-.vc-ghmd-root li { margin: 0.25em 0; }
-.vc-ghmd-root li input[type="checkbox"] { margin-right: 0.5em; }
-
-.vc-ghmd-root a { color: var(--color-accent-fg); text-decoration: none; }
-.vc-ghmd-root a:hover { text-decoration: underline; }
-
-.vc-ghmd-root .markdown-alert {
-  padding: 0.5em 1em;
-  margin: 1em 0;
-  border-left: 0.25em solid;
-  background: var(--color-canvas-subtle);
+/* ── Footnotes ───────────────────────────────────────────────── */
+.vc-ghmd-root .footnotes {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+  border-top: 1px solid var(--color-border-muted);
+  margin-top: 24px;
+  padding-top: 12px;
 }
-.vc-ghmd-root .markdown-alert-note { border-color: var(--color-accent-fg); }
-.vc-ghmd-root .markdown-alert-tip { border-color: #1a7f37; }
-.vc-ghmd-root .markdown-alert-warning { border-color: var(--color-attention-fg); }
-.vc-ghmd-root .markdown-alert-caution { border-color: var(--color-danger-fg); }
-.vc-ghmd-root .markdown-alert-important { border-color: #8250df; }
+.vc-ghmd-root .footnotes ol { padding-left: 16px; }
+.vc-ghmd-root .footnotes ol ol { list-style-type: lower-alpha; }
+.vc-ghmd-root .footnotes li { position: relative; }
+.vc-ghmd-root .footnotes li:target::before {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -24px;
+  pointer-events: none;
+  content: "";
+  border: 2px solid var(--color-accent-emphasis);
+  border-radius: 6px;
+}
+.vc-ghmd-root .footnotes li:target { color: var(--color-fg-default); }
+.vc-ghmd-root .footnotes .data-footnote-backref g-emoji { font-family: monospace; }
 
-.vc-ghmd-root img { max-width: 100%; }
+/* ── Kbd ─────────────────────────────────────────────────────── */
+.vc-ghmd-root kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px var(--font-code, ui-monospace, monospace);
+  line-height: 10px;
+  color: var(--color-fg-default);
+  vertical-align: middle;
+  background-color: var(--color-canvas-subtle);
+  border: solid 1px var(--color-border-default);
+  border-bottom-color: var(--color-border-muted);
+  border-radius: 6px;
+  box-shadow: inset 0 -1px 0 var(--color-border-muted);
+}
+
+/* ── Details / summary ──────────────────────────────────────── */
+.vc-ghmd-root details { display: block; }
+.vc-ghmd-root summary {
+  display: list-item;
+  cursor: pointer;
+}
+.vc-ghmd-root details > summary { outline: none; }
+.vc-ghmd-root details:not([open]) > *:not(summary) { display: none !important; }
