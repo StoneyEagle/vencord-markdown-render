@@ -17,10 +17,8 @@ GitHub-flavored markdown rendering for `.md` / `.markdown` attachments inside Di
 
 ## Install
 
-<!-- Replace the repo URL below with your actual fork/clone URL before publishing. -->
-
 ```
-git clone https://github.com/patrickstaarink/vencord-markdown-render.git
+git clone https://github.com/StoneyEagle/vencord-markdown-render.git
 cd vencord-markdown-render
 node install.js
 cd ~/Vencord   # or wherever you installed Vencord (Windows: %USERPROFILE%\Vencord)
@@ -79,4 +77,4 @@ GPL-3.0-or-later — same as Vencord.
 
 ## Credit
 
-Built by [@patrickstaarink](https://github.com/patrickstaarink).
+Built by [@StoneyEagle](https://github.com/StoneyEagle).
