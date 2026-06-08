@@ -18,7 +18,7 @@
     "react-dom": "^19.2.5",
     "rehype-stringify": "^10.0.1",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.8"
+    "vitest": "^3.2.6"
   },
   "dependencies": {
     "hast-util-sanitize": "^5.0.2",
